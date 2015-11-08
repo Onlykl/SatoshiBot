@@ -87,7 +87,7 @@ namespace Satoshi_GUI
             sf.Dispose();
             Log("Starting...");
             PrepRequest("https://satoshimines.com/action/newgame.php");
-            byte[] newGameresponce = Bcodes("player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
+            byte[] newGameresponce = Bcodes("bd=9442&player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
                 GameConfig.BombCount);
             running = true;
             button1.Text = "Stop after game.";
@@ -128,7 +128,7 @@ namespace Satoshi_GUI
                 running = true;
                 button1.Text = "Stop after game.";
                 PrepRequest("https://satoshimines.com/action/newgame.php");
-                byte[] newGameresponce = Bcodes("player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
+                byte[] newGameresponce = Bcodes("bd=9442&player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
                     GameConfig.BombCount);
                 getPostResponce(newGameresponce, EndNewGameResponce);
             }
@@ -340,7 +340,7 @@ namespace Satoshi_GUI
                 int betSquare = getNextSquare();
                 PrepRequest("https://satoshimines.com/action/newgame.php");
                 byte[] newGameresponce =
-                        Bcodes("player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
+                        Bcodes("bd=9442&player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
                             GameConfig.BombCount);
                 if (running)
                     getPostResponce(newGameresponce, EndNewGameResponce);
@@ -524,7 +524,7 @@ namespace Satoshi_GUI
 
                         PrepRequest("https://satoshimines.com/action/newgame.php");
                         byte[] newGameresponce =
-                                Bcodes("player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
+                                Bcodes("bd=9442&player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
                                         GameConfig.BombCount);
                         if (running)
                             getPostResponce(newGameresponce, EndNewGameResponce);
@@ -701,20 +701,10 @@ namespace Satoshi_GUI
             }
         }
 
-        private void gamePanel_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             if (OnRemove != null)
                 OnRemove(this);
-        }
-
-        private void gameGroupBox_Enter(object sender, EventArgs e)
-        {
-
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -741,16 +731,6 @@ namespace Satoshi_GUI
                 pauser.Set();
             }
             
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void winStats_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
