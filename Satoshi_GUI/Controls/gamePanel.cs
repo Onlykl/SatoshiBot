@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Net;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace Satoshi_GUI
@@ -67,6 +64,24 @@ namespace Satoshi_GUI
             }
         }
 
+        private string GetToken()
+        {
+            if (GameConfig.PlayerHash != null)
+            {
+                using (WebClient wc = new WebClient())
+                {
+                    string response = wc.DownloadString("https://www.satoshimines.com/play/" + GameConfig.PlayerHash);
+                    string bdvalue = new Regex("var bdval = '(.*?)'").Match(response).Groups[1].Value;
+                    return bdvalue;
+                }
+            }
+            else
+            {
+                Log("Error getting token...");
+                return string.Empty;
+            }
+        }
+
         public void StopRunning()
         {
             running = false;
@@ -86,8 +101,9 @@ namespace Satoshi_GUI
             gameGroupBox.Text = GameConfig.ConfigTag;
             sf.Dispose();
             Log("Starting...");
+           string bdValue = GetToken();
             PrepRequest("https://satoshimines.com/action/newgame.php");
-            byte[] newGameresponce = Bcodes("bd=9442&player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
+            byte[] newGameresponce = Bcodes("bd="+bdValue+"&player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
                 GameConfig.BombCount);
             running = true;
             button1.Text = "Stop after game.";
@@ -110,6 +126,7 @@ namespace Satoshi_GUI
                     stratergyIndex = 0;
                     gameGroupBox.Text = GameConfig.ConfigTag;
                 }
+                string bdValue = GetToken();
                 // button1.Enabled = false;
                 Log("Starting...");
 
@@ -128,7 +145,7 @@ namespace Satoshi_GUI
                 running = true;
                 button1.Text = "Stop after game.";
                 PrepRequest("https://satoshimines.com/action/newgame.php");
-                byte[] newGameresponce = Bcodes("bd=9442&player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
+                byte[] newGameresponce = Bcodes("bd=" + bdValue + "&player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
                     GameConfig.BombCount);
                 getPostResponce(newGameresponce, EndNewGameResponce);
             }
@@ -338,9 +355,10 @@ namespace Satoshi_GUI
 
                 Log("");
                 int betSquare = getNextSquare();
+                string bdValue = GetToken();
                 PrepRequest("https://satoshimines.com/action/newgame.php");
                 byte[] newGameresponce =
-                        Bcodes("bd=9442&player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
+                        Bcodes("bd=" + bdValue + "&player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
                             GameConfig.BombCount);
                 if (running)
                     getPostResponce(newGameresponce, EndNewGameResponce);
@@ -521,10 +539,10 @@ namespace Satoshi_GUI
                         //string url = string.Format("https://satoshimines.com/s/{0}/{1}/", bd.game_id, bd.random_string);
                         //Log("Url: {0}", url);
                         Log("");
-
+                        string bdValue = GetToken();
                         PrepRequest("https://satoshimines.com/action/newgame.php");
                         byte[] newGameresponce =
-                                Bcodes("bd=9442&player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
+                                Bcodes("bd=" + bdValue + "&player_hash={0}&bet={1}&num_mines={2}", GameConfig.PlayerHash, GameConfig.BetCost.ToString("0.000000", new CultureInfo("en-US")),
                                         GameConfig.BombCount);
                         if (running)
                             getPostResponce(newGameresponce, EndNewGameResponce);
